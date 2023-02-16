@@ -6,6 +6,22 @@
 #include<algorithm>
 #include <iomanip>
 
+std::vector<std::string> read_vector(const char* file_name) {
+	//initialize data
+	std::vector<std::string> data_vector_1D;
+	std::fstream file;
+	std::string row;
+	std::string data;
+
+	file.open(file_name);
+
+	while (file >> data) {
+		data_vector_1D.push_back(data);
+	}
+	return data_vector_1D;
+}
+
+
 
 std::vector<std::vector<std::string>> read_data(const char* file_name) {
     //initialize data
