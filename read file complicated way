@@ -1,0 +1,57 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<iostream>
+#include<vector>
+#include<sstream>
+#include<fstream>
+#include<algorithm>
+#include <iomanip>
+
+
+std::vector<std::vector<std::string>> read_data(const char* file_name) {
+    //initialize data
+	std::vector<std::string> data_vector_temp;
+	std::vector<std::string> data_vector_1D = read_vector(file_name);
+	std::vector<std::vector<std::string>>data_vector_2D;
+	std::fstream file;
+	std::string row;
+	int count{ 0 };
+
+	file.open(file_name);
+
+	while (std::getline(file, row)) {
+		data_vector_temp.push_back(row);
+	}
+
+	
+	for (int i{ 0 }; i < data_vector_temp.size(); i++) {
+		int length_row = data_vector_temp[i].length();
+		std::vector<std::string> temp_subvector;
+		for (int j{ 0 }; j < data_vector_1D.size() && count < data_vector_1D.size(); j++){
+			int length_element = data_vector_1D[count].length();
+			bool valve = false;
+			for (int k{ 0 }; k < length_row - length_element + 1; k++) {
+				if (count + 1 == data_vector_1D.size()) {
+					valve = true;
+					break;
+				}
+				if (data_vector_1D[count] == data_vector_temp[i].substr(k, length_element)) {
+					temp_subvector.push_back(data_vector_1D[count]);
+					check_repeat_elements(data_vector_1D[count + 1], temp_subvector, &valve);
+					count += 1;
+					
+					break;
+				}
+				if (k + 1 == length_row - length_element + 1) {
+					valve = true;
+					break;
+				}
+			}
+			if (valve == true) {
+				data_vector_2D.push_back(temp_subvector);
+				break;//reach the final segment in this line.
+			}
+		}
+	}
+	file.close();
+	return data_vector_2D;
+}
